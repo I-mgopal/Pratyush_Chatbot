@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        GEMINI_API_KEY = credentials('gemini-api-key') // Create this secret in Jenkins!
-    }
-
     stages {
         stage('Pull from GitHub') {
             steps {
