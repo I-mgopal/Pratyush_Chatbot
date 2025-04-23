@@ -14,13 +14,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t chatbot_project .'
+                bat 'docker build -t chatbot_project .'
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                sh '''
+                bat '''
                 docker stop chatbot_container || true
                 docker rm chatbot_container || true
                 docker run -d --name chatbot_container -p 5000:5000 \
