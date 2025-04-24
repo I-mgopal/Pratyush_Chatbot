@@ -19,8 +19,7 @@ pipeline {
                 bat '''
                 docker stop chatbot_container || true
                 docker rm chatbot_container || true
-                docker run -d --name chatbot_container -p 5000:5000 ^
-                  -e GEMINI_API_KEY=$GEMINI_API_KEY chatbot_project
+                docker run -d --name chatbot_container -p 5000:5000 chatbot_project
                 '''
             }
         }
@@ -29,9 +28,9 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     bat '''
-                    docker tag chatbot_project %DOCKER_USER%/chatbot_project
                     docker login -u %DOCKER_USER% -p %DOCKER_PASS%
-                    docker push %DOCKER_USER%/chatbot_project
+                    docker tag chatbot_project gopal89/pratyush_chatbot
+                    docker push gopal89/pratyush_chatbot
                     '''
                 }
             }
