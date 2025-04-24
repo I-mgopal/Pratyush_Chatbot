@@ -1,37 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Super Duper Chatbot</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DevOps Chatbot</title>
   <style>
+    :root {
+      --primary-color: #00bcd4;
+      --background-color: #0d1117;
+      --chat-background: #161b22;
+      --text-color: #ffffff;
+      --user-color: #81c784;
+      --bot-color: #4fc3f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      background-color: #000;
-      color: #fff;
+      background-color: var(--background-color);
+      color: var(--text-color);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: start;
+      min-height: 100vh;
       padding: 20px;
-      height: 100vh;
-      margin: 0;
     }
 
     h1 {
-      color: #00bcd4;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
+      font-size: 2.2rem;
+      color: var(--primary-color);
+      text-align: center;
     }
 
     #chat-box {
       width: 100%;
-      max-width: 600px;
+      max-width: 650px;
       height: 60vh;
       overflow-y: auto;
-      border: 2px solid #333;
-      border-radius: 10px;
-      padding: 15px;
-      background-color: #111;
-      margin-bottom: 15px;
+      padding: 20px;
+      border-radius: 16px;
+      background-color: var(--chat-background);
+      box-shadow: 0 4px 20px rgba(0, 188, 212, 0.15);
+      margin-bottom: 20px;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      margin-bottom: 12px;
+      line-height: 1.5;
     }
 
     .input-area {
@@ -39,7 +62,7 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      max-width: 600px;
+      max-width: 650px;
     }
 
     .input-row {
@@ -49,18 +72,27 @@
 
     input[type="text"] {
       flex: 1;
-      padding: 10px;
+      padding: 14px;
       border: none;
-      border-radius: 5px 0 0 5px;
+      border-radius: 12px 0 0 12px;
+      background-color: #1e252f;
+      color: white;
+      font-size: 1rem;
+    }
+
+    input[type="text"]::placeholder {
+      color: #aaa;
     }
 
     button.send-btn {
-      padding: 10px 15px;
+      padding: 14px 20px;
       border: none;
-      border-radius: 0 5px 5px 0;
-      background-color: #00bcd4;
+      border-radius: 0 12px 12px 0;
+      background-color: var(--primary-color);
       color: white;
+      font-size: 1rem;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     button.send-btn:hover {
@@ -72,27 +104,33 @@
     }
 
     #controls button {
-      background-color: #444;
+      background-color: #2c3e50;
       color: white;
       border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
+      padding: 10px 16px;
+      border-radius: 10px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     #controls button:hover {
-      background-color: #666;
+      background-color: #3c4f60;
     }
   </style>
 </head>
 <body>
-  <h1>Devops Super Chatbot</h1>
+  <h1>DevOps Gemini Chatbot</h1>
 
   <div id="chat-box"></div>
 
   <div class="input-area">
     <div class="input-row">
-      <input type="text" id="user-input" placeholder="Type your message..." onkeydown="if(event.key === 'Enter') sendMessage()">
+      <input
+        type="text"
+        id="user-input"
+        placeholder="Type your message..."
+        onkeydown="if(event.key === 'Enter') sendMessage()"
+      />
       <button class="send-btn" onclick="sendMessage()">Send</button>
     </div>
     <div id="controls">
@@ -108,10 +146,11 @@
 
     function appendMessage(sender, text) {
       const div = document.createElement("div");
+      div.className = "message";
       const isBot = sender.toLowerCase() === "bot";
-      const color = isBot ? "#4fc3f7" : "#81c784";
+      const color = isBot ? "var(--bot-color)" : "var(--user-color)";
       const time = new Date().toLocaleTimeString();
-      div.innerHTML = `<strong style="color: ${color};">${sender} [${time}]:</strong> ${text}`;
+      div.innerHTML = <strong style="color: ${color};">${sender} [${time}]:</strong> ${text};
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
     }
@@ -128,17 +167,17 @@
       fetch("/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message })  // 🔥 key fix: "message" not "prompt"
+        body: JSON.stringify({ message })
       })
       .then(res => res.json())
       .then(data => {
-        chatBox.lastChild.remove(); // remove "thinking..." message
+        chatBox.lastChild.remove(); // remove "Thinking..." message
         appendMessage("Bot", data.response || "🤖 Sorry, I didn’t understand that.");
         document.getElementById("ping").play();
       })
       .catch(() => {
         chatBox.lastChild.remove();
-        appendMessage("Bot", "⚠️ Error fetching response.");
+        appendMessage("Bot", "⚠ Error fetching response.");
       });
     }
 
