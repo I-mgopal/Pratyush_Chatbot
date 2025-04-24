@@ -14,6 +14,16 @@ pipeline {
             }
         }
 
+        stage('Push to Docker Hub') {
+            steps {
+                bat '''
+                docker tag chatbot_project gopal89/pratyush_chatbot
+                docker login -u gopal89 -p %DOCKER_HUB_PASSWORD%
+                docker push gopal89/pratyush_chatbot
+                '''
+            }
+        }
+
         stage('Run Docker Container') {
             steps {
                 bat '''
